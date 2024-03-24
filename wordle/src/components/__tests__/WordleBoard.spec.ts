@@ -1,5 +1,5 @@
 import WordleBoard from '@/components/WordleBoard.vue'
-import { VICTORY_MESSAGE } from '@/settings'
+import { DEFEAT_MESSAGE, VICTORY_MESSAGE } from '@/settings'
 import { mount } from '@vue/test-utils'
 
 describe('WordleBoard', () => {
@@ -20,7 +20,7 @@ describe('WordleBoard', () => {
     await guessInput.setValue('WRONG')
     await guessInput.trigger('keydown.enter')
 
-    expect(wrapper.text()).toContain('Better luck next time!')
+    expect(wrapper.text()).toContain(DEFEAT_MESSAGE)
   })
 
   test.todo('no message appears when the user has not yet made a guess')

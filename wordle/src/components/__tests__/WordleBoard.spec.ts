@@ -33,10 +33,18 @@ describe('WordleBoard', () => {
     expect(wrapper.text()).not.toContain(DEFEAT_MESSAGE)
   })
 
-  test('if a word of the day provided does not have exactle 5 characters, a warning is emitted', () => {
+  test('if the word of the day provided does not have exactle 5 characters, a warning is emitted', () => {
     console.warn = vi.fn()
 
     mount(WordleBoard, { props: { wordOfTheDay: 'TEST' } })
+
+    expect(console.warn).toHaveBeenCalled()
+  })
+
+  test('if the word of the day is not in uppercase, a warning is emitted', () => {
+    console.warn = vi.fn()
+
+    mount(WordleBoard, { props: { wordOfTheDay: 'Lower' } })
 
     expect(console.warn).toHaveBeenCalled()
   })

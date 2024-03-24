@@ -3,8 +3,10 @@ import { DEFEAT_MESSAGE, VICTORY_MESSAGE } from '@/settings'
 import { mount } from '@vue/test-utils'
 
 describe('WordleBoard', () => {
+  const wordOfTheDay = 'TESTS'
+
   test('a victory message appears when the user makes a guess that matches the word of the day', async () => {
-    const wrapper = mount(WordleBoard, { props: { wordOfTheDay: 'TESTS' } })
+    const wrapper = mount(WordleBoard, { props: { wordOfTheDay } })
 
     const guessInput = wrapper.find('input[type="text"]')
     await guessInput.setValue('TESTS')
@@ -14,7 +16,7 @@ describe('WordleBoard', () => {
   })
 
   test('a defeat message appears when the user makes a guess that does not match the word of the day', async () => {
-    const wrapper = mount(WordleBoard, { props: { wordOfTheDay: 'TESTS' } })
+    const wrapper = mount(WordleBoard, { props: { wordOfTheDay } })
 
     const guessInput = wrapper.find('input[type="text"]')
     await guessInput.setValue('WRONG')

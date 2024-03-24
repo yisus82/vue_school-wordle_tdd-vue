@@ -34,7 +34,7 @@ describe('WordleBoard', () => {
   })
 
   test('if a word of the day provided does not have exactle 5 characters, a warning is emitted', () => {
-    vi.spyOn(console, 'warn')
+    console.warn = vi.fn()
 
     mount(WordleBoard, { props: { wordOfTheDay: 'TEST' } })
 

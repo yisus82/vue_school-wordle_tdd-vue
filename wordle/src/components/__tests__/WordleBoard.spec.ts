@@ -1,5 +1,5 @@
 import WordleBoard from '@/components/WordleBoard.vue'
-import { DEFEAT_MESSAGE, VICTORY_MESSAGE } from '@/settings'
+import { DEFEAT_MESSAGE, LANGUAGE, VICTORY_MESSAGE, WORD_LENGTH } from '@/settings'
 import { mount } from '@vue/test-utils'
 
 describe('WordleBoard', () => {
@@ -11,6 +11,8 @@ describe('WordleBoard', () => {
     await guessInput.setValue(guessWord)
     await guessInput.trigger('keydown.enter')
   }
+
+  const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1)
 
   beforeEach(() => {
     wrapper = mount(WordleBoard, { props: { wordOfTheDay } })
@@ -41,17 +43,20 @@ describe('WordleBoard', () => {
     })
 
     test.each([
-      { wordOfTheDay: 'LESS', reason: 'having less than 5 characters' },
-      { wordOfTheDay: 'LONGER', reason: 'having more than 5 characters' },
+      { wordOfTheDay: 'LESS', reason: `having less than ${WORD_LENGTH} characters` },
+      { wordOfTheDay: 'LONGER', reason: `having more than ${WORD_LENGTH} characters` },
       { wordOfTheDay: 'lower', reason: 'not being in uppercase' },
-      { wordOfTheDay: 'QWERT', reason: 'not being a real word in English' }
+      {
+        wordOfTheDay: 'QWERT',
+        reason: `not being a real word in ${capitalize(LANGUAGE)}`
+      }
     ])('if $wordOfTheDay is provided, a warning is emitted for $reason', ({ wordOfTheDay }) => {
       mount(WordleBoard, { props: { wordOfTheDay } })
 
       expect(console.warn).toHaveBeenCalled()
     })
 
-    test('no warning is emitted if the word of the day is a real uppercase word in English with 5 characters', () => {
+    test(`no warning is emitted if the word of the day is a real uppercase word in ${capitalize(LANGUAGE)} with ${WORD_LENGTH} characters`, () => {
       mount(WordleBoard, { props: { wordOfTheDay: 'TESTS' } })
 
       expect(console.warn).not.toHaveBeenCalled()
@@ -59,13 +64,15 @@ describe('WordleBoard', () => {
   })
 
   describe('Player guesses', () => {
-    test('player guesses are limited to 5 characters', async () => {
+    test(`player guesses are limited to ${WORD_LENGTH} characters`, async () => {
       await playerSubmitsGuess(wordOfTheDay + 'EXTRA')
 
       expect(wrapper.text()).toContain(VICTORY_MESSAGE)
     })
 
-    test.todo('player guesses can only be submitted if they are real words in English')
+    test.todo(
+      `player guesses can only be submitted if they are real words in ${capitalize(LANGUAGE)}`
+    )
 
     test.todo('player guesses are not case-sensitive')
 

@@ -70,9 +70,12 @@ describe('WordleBoard', () => {
       expect(wrapper.text()).toContain(VICTORY_MESSAGE)
     })
 
-    test.todo(
-      `player guesses can only be submitted if they are real words in ${capitalize(LANGUAGE)}`
-    )
+    test(`player guesses can only be submitted if they are real words in ${capitalize(LANGUAGE)}`, async () => {
+      await playerSubmitsGuess('QWERT')
+
+      expect(wrapper.text()).not.toContain(VICTORY_MESSAGE)
+      expect(wrapper.text()).not.toContain(DEFEAT_MESSAGE)
+    })
 
     test.todo('player guesses are not case-sensitive')
 

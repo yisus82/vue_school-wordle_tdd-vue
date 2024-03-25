@@ -19,7 +19,7 @@ const guessSubmitted = ref('');
 
 const formattedGuessInProgress = computed({
   get: () => guessInProgress.value,
-  set: (newValue: string) => guessInProgress.value = newValue.slice(0, WORD_LENGTH).toUpperCase()
+  set: (newValue: string) => guessInProgress.value = newValue.replace(/[^\p{Letter}\p{Mark}]/gu, '').slice(0, WORD_LENGTH).toUpperCase(),
 });
 
 const handleSubmit = () => {

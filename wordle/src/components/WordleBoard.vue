@@ -1,6 +1,5 @@
 <script lang="ts">
-const wordsImportFile = `@/${LANGUAGE}WordsWith${WORD_LENGTH}Letters.json`;
-const { default: validWords } = await import(wordsImportFile);
+const { default: validWords } = await import(`../${LANGUAGE}WordsWith${WORD_LENGTH}Letters.json`);
 </script>
 
 <script setup lang="ts">
@@ -32,6 +31,7 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <input type="text" v-model="formattedGuessInProgress" @keydown.enter="handleSubmit" :maxlength="WORD_LENGTH" />
+  <input id="guessInput" type="text" v-model="formattedGuessInProgress" @keydown.enter="handleSubmit"
+    :maxlength="WORD_LENGTH" />
   <p v-if="guessSubmitted.length > 0" v-text="guessSubmitted === wordOfTheDay ? VICTORY_MESSAGE : DEFEAT_MESSAGE"></p>
 </template>

@@ -88,5 +88,11 @@ describe('WordleBoard', () => {
 
       expect(wrapper.find<HTMLInputElement>('input[type="text"]').element.value).toEqual('HÜÑRT')
     })
+
+    test('non-alphabetic characters are not rendered while being typed', async () => {
+      await playerSubmitsGuess('333')
+
+      expect(wrapper.find<HTMLInputElement>('input[type="text"]').element.value).toEqual('')
+    })
   })
 })

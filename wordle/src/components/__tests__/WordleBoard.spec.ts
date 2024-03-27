@@ -25,11 +25,27 @@ describe('WordleBoard', () => {
       expect(wrapper.text()).toContain(VICTORY_MESSAGE)
     })
 
-    test('a defeat message appears when the user makes a guess that does not match the word of the day', async () => {
-      await playerSubmitsGuess('WRONG')
+    describe.each(
+      Array.from({ length: WORD_LENGTH + 1 }, (_, i) => ({
+        numberOfGuesses: i + 1,
+        shouldSeeDefeatMessage: i === WORD_LENGTH
+      }))
+    )(
+      `a defeat message should appear when the user makes ${WORD_LENGTH + 1} wrong guesses in a row`,
+      ({ numberOfGuesses, shouldSeeDefeatMessage }) => {
+        test(`therefore for ${numberOfGuesses} guess(es), a defeat message ${shouldSeeDefeatMessage ? 'should' : 'should not'} appear`, async () => {
+          for (let i = 0; i < numberOfGuesses; i++) {
+            await playerSubmitsGuess('WRONG')
+          }
 
-      expect(wrapper.text()).toContain(DEFEAT_MESSAGE)
-    })
+          if (shouldSeeDefeatMessage) {
+            expect(wrapper.text()).toContain(DEFEAT_MESSAGE)
+          } else {
+            expect(wrapper.text()).not.toContain(DEFEAT_MESSAGE)
+          }
+        })
+      }
+    )
 
     test('no message appears when the user has not yet made a guess', async () => {
       expect(wrapper.text()).not.toContain(VICTORY_MESSAGE)
@@ -46,10 +62,7 @@ describe('WordleBoard', () => {
       { wordOfTheDay: 'LESS', reason: `having less than ${WORD_LENGTH} characters` },
       { wordOfTheDay: 'LONGER', reason: `having more than ${WORD_LENGTH} characters` },
       { wordOfTheDay: 'lower', reason: 'not being in uppercase' },
-      {
-        wordOfTheDay: 'QWERT',
-        reason: `not being a real word in ${capitalize(LANGUAGE)}`
-      }
+      { wordOfTheDay: 'QWERT', reason: `not being a real word in ${capitalize(LANGUAGE)}` }
     ])('if $wordOfTheDay is provided, a warning is emitted for $reason', ({ wordOfTheDay }) => {
       mount(WordleBoard, { props: { wordOfTheDay } })
 

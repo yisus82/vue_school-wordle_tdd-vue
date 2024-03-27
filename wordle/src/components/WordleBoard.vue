@@ -10,18 +10,21 @@ import { ref } from 'vue';
 defineProps({
   wordOfTheDay: {
     type: String,
+    required: true,
     validator: (wordGiven: string) => validWords.includes(wordGiven)
   }
 });
 
-const guessSubmitted = ref('');
+const guessesSubmitted = ref<string[]>([]);
 </script>
 
 <template>
   <main>
-    <guess-input @guess-submitted="guess => guessSubmitted = guess" />
-    <p class="end-of-game-message" v-if="guessSubmitted.length > 0"
-      v-text="guessSubmitted === wordOfTheDay ? VICTORY_MESSAGE : DEFEAT_MESSAGE"></p>
+    <guess-input @guess-submitted="guess => guessesSubmitted.push(guess)" />
+    <p class="end-of-game-message"
+      v-if="guessesSubmitted.includes(wordOfTheDay) || guessesSubmitted.length === WORD_LENGTH + 1"
+      v-text="guessesSubmitted.includes(wordOfTheDay) ? VICTORY_MESSAGE : DEFEAT_MESSAGE">
+    </p>
   </main>
 </template>
 

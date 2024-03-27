@@ -1,5 +1,5 @@
 import WordleBoard from '@/components/WordleBoard.vue'
-import { DEFEAT_MESSAGE, LANGUAGE, VICTORY_MESSAGE, WORD_LENGTH } from '@/settings'
+import { DEFEAT_MESSAGE, LANGUAGE, MAX_GUESSES, VICTORY_MESSAGE, WORD_LENGTH } from '@/settings'
 import { mount } from '@vue/test-utils'
 
 describe('WordleBoard', () => {
@@ -26,12 +26,13 @@ describe('WordleBoard', () => {
     })
 
     describe.each(
-      Array.from({ length: WORD_LENGTH + 1 }, (_, i) => ({
-        numberOfGuesses: i + 1,
-        shouldSeeDefeatMessage: i === WORD_LENGTH
-      }))
+      Array.from({ length: MAX_GUESSES }, (_, i) => {
+        const numberOfGuesses = i + 1
+
+        return { numberOfGuesses, shouldSeeDefeatMessage: numberOfGuesses === MAX_GUESSES }
+      })
     )(
-      `a defeat message should appear when the user makes ${WORD_LENGTH + 1} wrong guesses in a row`,
+      `a defeat message should appear when the user makes ${MAX_GUESSES} wrong guesses in a row`,
       ({ numberOfGuesses, shouldSeeDefeatMessage }) => {
         test(`therefore for ${numberOfGuesses} guess(es), a defeat message ${shouldSeeDefeatMessage ? 'should' : 'should not'} appear`, async () => {
           for (let i = 0; i < numberOfGuesses; i++) {

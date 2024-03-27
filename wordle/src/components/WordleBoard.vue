@@ -4,7 +4,7 @@ const { default: validWords } = await import(`../${LANGUAGE}WordsWith${WORD_LENG
 
 <script setup lang="ts">
 import GuessInput from '@/components/GuessInput.vue';
-import { DEFEAT_MESSAGE, LANGUAGE, VICTORY_MESSAGE, WORD_LENGTH } from '@/settings';
+import { DEFEAT_MESSAGE, LANGUAGE, MAX_GUESSES, VICTORY_MESSAGE, WORD_LENGTH } from '@/settings';
 import { ref } from 'vue';
 
 defineProps({
@@ -22,7 +22,7 @@ const guessesSubmitted = ref<string[]>([]);
   <main>
     <guess-input @guess-submitted="guess => guessesSubmitted.push(guess)" />
     <p class="end-of-game-message"
-      v-if="guessesSubmitted.includes(wordOfTheDay) || guessesSubmitted.length === WORD_LENGTH + 1"
+      v-if="guessesSubmitted.includes(wordOfTheDay) || guessesSubmitted.length === MAX_GUESSES"
       v-text="guessesSubmitted.includes(wordOfTheDay) ? VICTORY_MESSAGE : DEFEAT_MESSAGE">
     </p>
   </main>

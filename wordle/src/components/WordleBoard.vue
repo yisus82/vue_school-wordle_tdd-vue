@@ -5,9 +5,9 @@ const { default: validWords } = await import(`../${LANGUAGE}WordsWith${WORD_LENG
 <script setup lang="ts">
 import GuessInput from '@/components/GuessInput.vue';
 import { DEFEAT_MESSAGE, LANGUAGE, MAX_GUESSES, VICTORY_MESSAGE, WORD_LENGTH } from '@/settings';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
-defineProps({
+const props = defineProps({
   wordOfTheDay: {
     type: String,
     required: true,
@@ -16,13 +16,16 @@ defineProps({
 });
 
 const guessesSubmitted = ref<string[]>([]);
+
+const isGameOver = computed(() =>
+  guessesSubmitted.value.includes(props.wordOfTheDay)
+  || guessesSubmitted.value.length === MAX_GUESSES);
 </script>
 
 <template>
   <main>
     <guess-input @guess-submitted="guess => guessesSubmitted.push(guess)" />
-    <p class="end-of-game-message"
-      v-if="guessesSubmitted.includes(wordOfTheDay) || guessesSubmitted.length === MAX_GUESSES"
+    <p class="end-of-game-message" v-if="isGameOver"
       v-text="guessesSubmitted.includes(wordOfTheDay) ? VICTORY_MESSAGE : DEFEAT_MESSAGE">
     </p>
   </main>

@@ -18,6 +18,37 @@ const guessSubmitted = ref('');
 </script>
 
 <template>
-  <guess-input @guess-submitted="guess => guessSubmitted = guess" />
-  <p v-if="guessSubmitted.length > 0" v-text="guessSubmitted === wordOfTheDay ? VICTORY_MESSAGE : DEFEAT_MESSAGE"></p>
+  <main>
+    <guess-input @guess-submitted="guess => guessSubmitted = guess" />
+    <p class="end-of-game-message" v-if="guessSubmitted.length > 0"
+      v-text="guessSubmitted === wordOfTheDay ? VICTORY_MESSAGE : DEFEAT_MESSAGE"></p>
+  </main>
 </template>
+
+<style scoped>
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3rem;
+}
+
+@keyframes end-of-game-message-animation {
+  0% {
+    opacity: 0;
+    transform: rotateZ(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(2rem);
+  }
+}
+
+.end-of-game-message {
+  font-size: 3rem;
+  text-align: center;
+  white-space: nowrap;
+  animation: end-of-game-message-animation 700ms forwards;
+}
+</style>

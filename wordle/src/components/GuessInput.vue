@@ -7,6 +7,8 @@ import GuessView from '@/components/GuessView.vue';
 import { LANGUAGE, WORD_LENGTH } from '@/settings';
 import { ref } from 'vue';
 
+withDefaults(defineProps<{ disabled?: boolean; }>(), { disabled: false });
+
 const emit = defineEmits<{
   'guess-submitted': [guess: string],
 }>();
@@ -48,7 +50,8 @@ const handleSubmit = () => {
 <template>
   <guess-view :guess="guessInProgress" />
   <input id="guessInput" type="text" :value="guessInProgress" @keydown.enter="handleSubmit" @input="formatInput"
-    :maxlength="WORD_LENGTH" autofocus @blur="({ target }) => (target as HTMLInputElement).focus()" />
+    :maxlength="WORD_LENGTH" autofocus @blur="({ target }) => (target as HTMLInputElement).focus()"
+    :disabled="disabled" />
 </template>
 
 <style scoped>

@@ -12,6 +12,11 @@ defineProps<{ guess: string; }>();
 </template>
 
 <style scoped>
+ul {
+  margin: 0;
+  padding: 0;
+}
+
 .word {
   display: flex;
   list-style-type: none;

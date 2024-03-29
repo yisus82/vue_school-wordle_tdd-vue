@@ -40,6 +40,7 @@ const handleSubmit = () => {
   }
 
   emit('guess-submitted', guessInProgress.value);
+  guessInProgress.value = '';
 };
 </script>
 

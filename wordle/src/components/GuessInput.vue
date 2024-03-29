@@ -13,6 +13,7 @@ const emit = defineEmits<{
 
 const guessInProgress = ref('');
 const lastCharWasAccent = ref(false);
+const hasFailedValidation = ref(false);
 
 const formatInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -37,6 +38,8 @@ const formatInput = (event: Event) => {
 
 const handleSubmit = () => {
   if (!validWords.includes(guessInProgress.value)) {
+    hasFailedValidation.value = true;
+    setTimeout(() => hasFailedValidation.value = false, 500);
     return;
   }
 
@@ -46,7 +49,7 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <guess-view :guess="guessInProgress" />
+  <guess-view :guess="guessInProgress" :class="{ shake: hasFailedValidation }" />
   <input id="guessInput" type="text" :value="guessInProgress" @keydown.enter="handleSubmit" @input="formatInput"
     :maxlength="WORD_LENGTH" autofocus @blur="({ target }) => (target as HTMLInputElement).focus()" />
 </template>
@@ -55,5 +58,33 @@ const handleSubmit = () => {
 input {
   position: absolute;
   opacity: 0;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(-2%);
+  }
+
+  25% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-2%);
+  }
+
+  75% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(2%);
+  }
+}
+
+.shake {
+  animation: shake;
+  animation-duration: 100ms;
+  animation-iteration-count: 2;
 }
 </style>

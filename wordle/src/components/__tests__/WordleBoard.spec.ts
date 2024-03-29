@@ -1,3 +1,4 @@
+import GuessView from '@/components/GuessView.vue'
 import WordleBoard from '@/components/WordleBoard.vue'
 import { DEFEAT_MESSAGE, LANGUAGE, MAX_GUESSES, VICTORY_MESSAGE, WORD_LENGTH } from '@/settings'
 import { mount } from '@vue/test-utils'
@@ -144,14 +145,43 @@ describe('WordleBoard', () => {
     })
   })
 
-  test('all the guesses made by the player are displayed in the order they were made', async () => {
-    const guesses = ['WRONG', 'GUESS', 'HELLO', 'WORLD', 'HAPPY', 'CODER']
-    for (const guess of guesses) {
-      await playerSubmitsGuess(guess)
-    }
+  describe('Guess history', () => {
+    test(`${MAX_GUESSES} guess-view components are displayed at the start of the game`, () => {
+      expect(wrapper.findAllComponents(GuessView)).toHaveLength(MAX_GUESSES)
+    })
 
-    for (const guess of guesses) {
-      expect(wrapper.text()).toContain(guess)
-    }
+    test(`${MAX_GUESSES} guess-view components are displayed when the player loses the game`, async () => {
+      for (let i = 0; i < MAX_GUESSES; i++) {
+        await playerSubmitsGuess('WRONG')
+      }
+
+      expect(wrapper.findAllComponents(GuessView)).toHaveLength(MAX_GUESSES)
+    })
+
+    test(`${MAX_GUESSES} guess-view components are displayed when the player wins the game`, async () => {
+      await playerSubmitsGuess(wordOfTheDay)
+
+      expect(wrapper.findAllComponents(GuessView)).toHaveLength(MAX_GUESSES)
+    })
+
+    test(`${MAX_GUESSES} guess-view components are displayed after each guess is submitted`, async () => {
+      for (let i = 0; i < MAX_GUESSES; i++) {
+        await playerSubmitsGuess('WRONG')
+        expect(wrapper.findAllComponents(GuessView)).toHaveLength(MAX_GUESSES)
+      }
+    })
+
+    test('all the guesses made by the player are displayed in the order they were made', async () => {
+      const guesses = ['WRONG', 'GUESS', 'HELLO', 'WORLD', 'HAPPY', 'CODER']
+      for (const guess of guesses) {
+        await playerSubmitsGuess(guess)
+      }
+
+      const guessViews = wrapper.findAllComponents(GuessView)
+      expect(guessViews).toHaveLength(guesses.length)
+      for (let i = 0; i < guessViews.length; i++) {
+        expect(guessViews[i].text()).toContain(guesses[i])
+      }
+    })
   })
 })

@@ -48,7 +48,7 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <guess-view :guess="guessInProgress" />
+  <guess-view v-if="!disabled" :guess="guessInProgress" />
   <input id="guessInput" type="text" :value="guessInProgress" @keydown.enter="handleSubmit" @input="formatInput"
     :maxlength="WORD_LENGTH" autofocus @blur="({ target }) => (target as HTMLInputElement).focus()"
     :disabled="disabled" />

@@ -119,4 +119,15 @@ describe('WordleBoard', () => {
       expect(wrapper.find<HTMLInputElement>('input[type="text"]').element.value).toEqual('')
     })
   })
+
+  test('all the guesses made by the player are displayed in the order they were made', async () => {
+    const guesses = ['WRONG', 'GUESS', 'HELLO', 'WORLD', 'HAPPY', 'CODER']
+    for (const guess of guesses) {
+      await playerSubmitsGuess(guess)
+    }
+
+    for (const guess of guesses) {
+      expect(wrapper.text()).toContain(guess)
+    }
+  })
 })

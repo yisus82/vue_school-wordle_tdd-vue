@@ -126,22 +126,20 @@ describe('WordleBoard', () => {
       expect(wrapper.find<HTMLInputElement>('input[type="text"]').element.value).toEqual('')
     })
 
-    test('the player loses control after the maximum number of guesses has been reached', async () => {
-      for (let i = 0; i < MAX_GUESSES; i++) {
-        await playerSubmitsGuess('WRONG')
-      }
+    describe('the player can only submit guesses if the game is not over', async () => {
+      test('the guess input disappears after the maximum number of guesses has been reached', async () => {
+        for (let i = 0; i < MAX_GUESSES; i++) {
+          await playerSubmitsGuess('WRONG')
+        }
 
-      expect(
-        wrapper.find<HTMLInputElement>('input[type="text"]').attributes('disabled')
-      ).not.toBeUndefined()
-    })
+        expect(wrapper.find<HTMLInputElement>('input[type="text"]').exists()).toBe(false)
+      })
 
-    test('the player loses control after the correct word is guessed', async () => {
-      await playerSubmitsGuess(wordOfTheDay)
+      test('the guess input disappears after the correct word is guessed', async () => {
+        await playerSubmitsGuess(wordOfTheDay)
 
-      expect(
-        wrapper.find<HTMLInputElement>('input[type="text"]').attributes('disabled')
-      ).not.toBeUndefined()
+        expect(wrapper.find<HTMLInputElement>('input[type="text"]').exists()).toBe(false)
+      })
     })
   })
 

@@ -35,7 +35,7 @@ const remainingGuesses = computed(() => {
         <guess-view :guess="guess" :answer="wordOfTheDay" />
       </li>
       <li v-if="!isGameOver">
-        <guess-input @guess-submitted="guess => guessesSubmitted.push(guess)" />
+        <guess-input @guess-submitted="guess => guessesSubmitted.push(guess)" :guessesSubmitted="guessesSubmitted" />
       </li>
       <li v-for="index in remainingGuesses" :key="`empty-${index}`">
         <guess-view :guess="''" />

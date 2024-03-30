@@ -7,6 +7,8 @@ import GuessView from '@/components/GuessView.vue';
 import { LANGUAGE, WORD_LENGTH } from '@/settings';
 import { ref } from 'vue';
 
+const props = defineProps<{ guessesSubmitted: string[]; }>();
+
 const emit = defineEmits<{
   'guess-submitted': [guess: string],
 }>();
@@ -37,7 +39,7 @@ const formatInput = (event: Event) => {
 };
 
 const handleSubmit = () => {
-  if (!validWords.includes(guessInProgress.value)) {
+  if (props.guessesSubmitted.includes(guessInProgress.value) || !validWords.includes(guessInProgress.value)) {
     hasFailedValidation.value = true;
     setTimeout(() => hasFailedValidation.value = false, 500);
     return;

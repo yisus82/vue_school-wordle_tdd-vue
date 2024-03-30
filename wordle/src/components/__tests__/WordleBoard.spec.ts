@@ -32,28 +32,14 @@ describe('WordleBoard', () => {
       expect(wrapper.text()).toContain(VICTORY_MESSAGE)
     })
 
-    describe.each(
-      Array.from({ length: MAX_GUESSES }, (_, i) => {
-        const numberOfGuesses = i + 1
-
-        return { numberOfGuesses, shouldSeeDefeatMessage: numberOfGuesses === MAX_GUESSES }
-      })
-    )(
-      `a defeat message should appear when the user makes ${MAX_GUESSES} wrong guesses in a row`,
-      ({ numberOfGuesses, shouldSeeDefeatMessage }) => {
-        test(`therefore for ${numberOfGuesses} guess(es), a defeat message ${shouldSeeDefeatMessage ? 'should' : 'should not'} appear`, async () => {
-          for (let i = 0; i < numberOfGuesses; i++) {
-            await playerTypesAndSubmitsGuess('WRONG')
-          }
-
-          if (shouldSeeDefeatMessage) {
-            expect(wrapper.text()).toContain(DEFEAT_MESSAGE)
-          } else {
-            expect(wrapper.text()).not.toContain(DEFEAT_MESSAGE)
-          }
-        })
+    test(`a defeat message should appear when the user makes ${MAX_GUESSES} wrong guesses in a row`, async () => {
+      const guesses = ['WRONG', 'GUESS', 'HELLO', 'WORLD', 'HAPPY', 'CODER']
+      for (const guess of guesses) {
+        expect(wrapper.text()).not.toContain(DEFEAT_MESSAGE)
+        await playerTypesAndSubmitsGuess(guess)
       }
-    )
+      expect(wrapper.text()).toContain(DEFEAT_MESSAGE)
+    })
 
     test('no message appears when the user has not yet made a guess', async () => {
       expect(wrapper.text()).not.toContain(VICTORY_MESSAGE)
@@ -109,9 +95,14 @@ describe('WordleBoard', () => {
 
     test(`player guesses can only be submitted if they are real words in ${capitalize(LANGUAGE)}`, async () => {
       await playerTypesAndSubmitsGuess('QWERT')
+      expect(wrapper.find<HTMLInputElement>('input[type="text"]').element.value).toEqual('QWERT')
+    })
 
-      expect(wrapper.text()).not.toContain(VICTORY_MESSAGE)
-      expect(wrapper.text()).not.toContain(DEFEAT_MESSAGE)
+    test('player guesses can only be submitted if they have not already been submitted', async () => {
+      await playerTypesAndSubmitsGuess('WRONG')
+      expect(wrapper.find<HTMLInputElement>('input[type="text"]').element.value).toEqual('')
+      await playerTypesAndSubmitsGuess('WRONG')
+      expect(wrapper.find<HTMLInputElement>('input[type="text"]').element.value).toEqual('WRONG')
     })
 
     test('player guesses are not case-sensitive', async () => {
@@ -134,8 +125,9 @@ describe('WordleBoard', () => {
 
     describe('the player can only submit guesses if the game is not over', async () => {
       test('the guess input disappears after the maximum number of guesses has been reached', async () => {
-        for (let i = 0; i < MAX_GUESSES; i++) {
-          await playerTypesAndSubmitsGuess('WRONG')
+        const guesses = ['WRONG', 'GUESS', 'HELLO', 'WORLD', 'HAPPY', 'CODER']
+        for (const guess of guesses) {
+          await playerTypesAndSubmitsGuess(guess)
         }
 
         expect(wrapper.find<HTMLInputElement>('input[type="text"]').exists()).toBe(false)

@@ -7,10 +7,15 @@ describe('WordleBoard', () => {
   const wordOfTheDay = 'TESTS'
   let wrapper: ReturnType<typeof mount>
 
+  const playerTypesGuess = async (guessWord: string) =>
+    await wrapper.find('input[type="text"]').setValue(guessWord)
+
+  const playerSubmitsGuess = async () =>
+    await wrapper.find('input[type="text"]').trigger('keydown.enter')
+
   const playerTypesAndSubmitsGuess = async (guessWord: string) => {
-    const guessInput = wrapper.find('input[type="text"]')
-    await guessInput.setValue(guessWord)
-    await guessInput.trigger('keydown.enter')
+    await playerTypesGuess(guessWord)
+    await playerSubmitsGuess()
   }
 
   const capitalize = (word: string) => word.charAt(0).toUpperCase() + word.slice(1)

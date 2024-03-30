@@ -11,15 +11,15 @@ import { computed, ref } from 'vue';
 const props = defineProps({
   wordOfTheDay: {
     type: String,
-    required: true,
     validator: (wordGiven: string) => validWords.includes(wordGiven)
   }
 });
 
 const guessesSubmitted = ref<string[]>([]);
+const wordOfTheDay = ref<string>(props.wordOfTheDay ?? validWords[Math.floor(Math.random() * validWords.length)]);
 
 const isGameOver = computed(() =>
-  guessesSubmitted.value.includes(props.wordOfTheDay)
+  guessesSubmitted.value.includes(wordOfTheDay.value)
   || guessesSubmitted.value.length === MAX_GUESSES);
 
 const remainingGuesses = computed(() => {

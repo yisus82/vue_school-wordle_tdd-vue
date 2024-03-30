@@ -8,7 +8,9 @@ const getFeedback = (position: number) => {
     return null;
   }
 
-  return props.guess[position] === props.answer[position] ? 'correct' : 'wrong';
+  const letter = props.guess[position];
+
+  return letter === props.answer[position] ? 'correct' : props.answer.includes(letter) ? 'almost' : 'wrong';
 };
 </script>
 

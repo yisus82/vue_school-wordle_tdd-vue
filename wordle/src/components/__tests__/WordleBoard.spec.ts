@@ -237,21 +237,18 @@ describe('WordleBoard', () => {
         const wordOfTheDay = 'WORLD'
         const guess = 'WRONG'
 
-        test.skipIf(expectedFeedback === 'almost')(
-          `the feedback for the letter at position ${position} is ${expectedFeedback} because ${reason}`,
-          async () => {
-            wrapper = mount(WordleBoard, { props: { wordOfTheDay } })
+        test(`the feedback for the letter at position ${position} is ${expectedFeedback} because ${reason}`, async () => {
+          wrapper = mount(WordleBoard, { props: { wordOfTheDay } })
 
-            await playerTypesAndSubmitsGuess(guess)
+          await playerTypesAndSubmitsGuess(guess)
 
-            const feedback = wrapper
-              .findAll('[data-letter]')
-              .at(position)
-              ?.attributes('data-letter-feedback')
+          const feedback = wrapper
+            .findAll('[data-letter]')
+            .at(position)
+            ?.attributes('data-letter-feedback')
 
-            expect(feedback).toEqual(expectedFeedback)
-          }
-        )
+          expect(feedback).toEqual(expectedFeedback)
+        })
       }
     )
   })

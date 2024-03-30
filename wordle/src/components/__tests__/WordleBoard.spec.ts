@@ -204,5 +204,55 @@ describe('WordleBoard', () => {
 
       expect(wrapper.find('[data-letter-feedback]').exists()).toBe(true)
     })
+
+    describe.each([
+      {
+        position: 0,
+        expectedFeedback: 'correct',
+        reason: 'the letter is in the correct position'
+      },
+      {
+        position: 1,
+        expectedFeedback: 'almost',
+        reason: 'the letter is in the word but not in the correct position'
+      },
+      {
+        position: 2,
+        expectedFeedback: 'almost',
+        reason: 'the letter is in the word but not in the correct position'
+      },
+      {
+        position: 3,
+        expectedFeedback: 'wrong',
+        reason: 'the letter is not in the word'
+      },
+      {
+        position: 4,
+        expectedFeedback: 'wrong',
+        reason: 'the letter is not in the word'
+      }
+    ])(
+      `the feedback for the letter at position $position is $expectedFeedback because $reason`,
+      ({ position, expectedFeedback, reason }) => {
+        const wordOfTheDay = 'WORLD'
+        const guess = 'WRONG'
+
+        test.skipIf(expectedFeedback !== 'correct')(
+          `the feedback for the letter at position ${position} is ${expectedFeedback} because ${reason}`,
+          async () => {
+            wrapper = mount(WordleBoard, { props: { wordOfTheDay } })
+
+            await playerTypesAndSubmitsGuess(guess)
+
+            const feedback = wrapper
+              .findAll('[data-letter]')
+              .at(position)
+              ?.attributes('data-letter-feedback')
+
+            expect(feedback).toEqual(expectedFeedback)
+          }
+        )
+      }
+    )
   })
 })

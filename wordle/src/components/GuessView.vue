@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { WORD_LENGTH } from '@/settings';
+import { LetterFeedback } from '@/types';
 
 const props = defineProps<{ guess: string; answer?: string; }>();
 
-const getFeedback = (position: number) => {
+const getFeedback = (position: number): null | LetterFeedback => {
   if (!props.answer) {
     return null;
   }
 
   const letter = props.guess[position];
 
-  return letter === props.answer[position] ? 'correct' : props.answer.includes(letter) ? 'almost' : 'wrong';
+  return letter === props.answer[position] ?
+    LetterFeedback.CORRECT : props.answer.includes(letter) ?
+      LetterFeedback.ALMOST : LetterFeedback.INCORRECT;
 };
 </script>
 

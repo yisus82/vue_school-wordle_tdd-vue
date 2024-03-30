@@ -1,6 +1,7 @@
 import GuessView from '@/components/GuessView.vue'
 import WordleBoard from '@/components/WordleBoard.vue'
 import { DEFEAT_MESSAGE, LANGUAGE, MAX_GUESSES, VICTORY_MESSAGE, WORD_LENGTH } from '@/settings'
+import { LetterFeedback } from '@/types'
 import { mount } from '@vue/test-utils'
 
 describe('WordleBoard', () => {
@@ -208,27 +209,27 @@ describe('WordleBoard', () => {
     describe.each([
       {
         position: 0,
-        expectedFeedback: 'correct',
+        expectedFeedback: LetterFeedback.CORRECT,
         reason: 'the letter is in the correct position'
       },
       {
         position: 1,
-        expectedFeedback: 'almost',
+        expectedFeedback: LetterFeedback.ALMOST,
         reason: 'the letter is in the word but not in the correct position'
       },
       {
         position: 2,
-        expectedFeedback: 'almost',
+        expectedFeedback: LetterFeedback.ALMOST,
         reason: 'the letter is in the word but not in the correct position'
       },
       {
         position: 3,
-        expectedFeedback: 'wrong',
+        expectedFeedback: LetterFeedback.INCORRECT,
         reason: 'the letter is not in the word'
       },
       {
         position: 4,
-        expectedFeedback: 'wrong',
+        expectedFeedback: LetterFeedback.INCORRECT,
         reason: 'the letter is not in the word'
       }
     ])(

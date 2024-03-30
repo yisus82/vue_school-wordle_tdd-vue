@@ -20,7 +20,13 @@ const getFeedback = (position: number): null | LetterFeedback => {
 <template>
   <ul class="word">
     <li v-for="(letter, index) in guess.padEnd(WORD_LENGTH, ' ')" :key="`${letter}-${index}`" :data-letter="letter"
-      :data-letter-feedback="getFeedback(index)" class="letter" v-text="letter" :class="{ flip: answer }"></li>
+      :data-letter-feedback="getFeedback(index)" class="letter" v-text="letter" :class="{
+      flip: answer,
+      correct: getFeedback(index) === LetterFeedback.CORRECT,
+      almost: getFeedback(index) === LetterFeedback.ALMOST,
+      incorrect: getFeedback(index) === LetterFeedback.INCORRECT
+    }">
+    </li>
   </ul>
 </template>
 
@@ -49,6 +55,18 @@ ul {
   font-weight: bolder;
   border: 1px solid var(--back-color);
   background-color: var(--front-color);
+}
+
+.correct {
+  --back-color: hsl(120, 25%, 65%);
+}
+
+.almost {
+  --back-color: hsl(40, 25%, 65%);
+}
+
+.incorrect {
+  --back-color: hsl(0, 25%, 65%);
 }
 
 @keyframes pop {

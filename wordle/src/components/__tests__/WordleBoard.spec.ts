@@ -187,4 +187,22 @@ describe('WordleBoard', () => {
       }
     })
   })
+
+  describe('Feedback for player guesses', () => {
+    test('hints are not displayed before the player started typing the guess', async () => {
+      expect(wrapper.find('[data-letter-feedback]').exists()).toBe(false)
+    })
+
+    test('hints are not displayed before the player submits a guess', async () => {
+      await playerTypesGuess('WRONG')
+
+      expect(wrapper.find('[data-letter-feedback]').exists()).toBe(false)
+    })
+
+    test('hints are displayed after the player submits a guess', async () => {
+      await playerTypesAndSubmitsGuess('WRONG')
+
+      expect(wrapper.find('[data-letter-feedback]').exists()).toBe(true)
+    })
+  })
 })
